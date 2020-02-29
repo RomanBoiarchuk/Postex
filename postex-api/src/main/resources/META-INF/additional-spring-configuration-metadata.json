@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "app.jwt.base64EncodedSecretKey",
+      "type": "java.lang.String",
+      "description": "Base64 encoded secret key for JWT authentication."
+    },
+    {
+      "name": "app.jwt.expirationInMs",
+      "type": "java.lang.String",
+      "description": "Expiration time for JWT token in milliseconds."
+    }
+  ]
+}
