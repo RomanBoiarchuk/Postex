@@ -3,6 +3,7 @@ package com.project.postex.models;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comment {
@@ -11,5 +12,5 @@ public class Comment {
     private Account author;
     @NotBlank(message = "The text of a comment can't be empty.")
     private String text;
-    private List<Comment> replies;
+    private List<Comment> replies = new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,5 +32,5 @@ public class Account {
     @NotNull(message = "User can't be null.")
     private User user;
     @DBRef(lazy = true)
-    private List<Account> friends;
+    private List<Account> friends = new ArrayList<>();
 }

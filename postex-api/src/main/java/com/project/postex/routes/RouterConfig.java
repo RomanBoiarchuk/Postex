@@ -2,6 +2,7 @@ package com.project.postex.routes;
 
 import com.project.postex.handlers.AccountHandler;
 import com.project.postex.handlers.AuthenticationHandler;
+import com.project.postex.handlers.PostHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class RouterConfig {
     private final AccountHandler accountHandler;
     private final AuthenticationHandler authHandler;
+    private final PostHandler postHandler;
 
     @Bean
     public RouterFunction<ServerResponse> authRoutes() {
@@ -29,6 +31,15 @@ public class RouterConfig {
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
                 .route(GET("/profile"), accountHandler::getProfile);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> postRoutes() {
+        return RouterFunctions
+                .route(GET("/posts"), postHandler::getPosts)
+                .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)
+                .andRoute(PUT("/posts/{id}").and(accept(APPLICATION_JSON)), postHandler::updatePost)
+                .andRoute(DELETE("/posts/{id}"), postHandler::deletePost);
     }
 
 }
