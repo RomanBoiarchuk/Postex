@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Document
 @Data
@@ -21,7 +23,7 @@ public class Post {
     @DBRef
     private Account author;
     private List<Comment> comments = new ArrayList<>();
-    private List<String> likeAccountIds = new ArrayList<>();
+    private Set<String> likeAccountIds = new HashSet<>();
     @CreatedDate
     private LocalDateTime creationTime;
 

@@ -1,6 +1,8 @@
 package com.project.postex.handlers;
 
+import com.project.postex.models.Account;
 import com.project.postex.models.Post;
+import com.project.postex.service.AccountService;
 import com.project.postex.service.AuthorizationService;
 import com.project.postex.service.PostService;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class PostHandler {
     private final PostService postService;
     private final AuthorizationService authorizationService;
+    private final AccountService accountService;
 
     public Mono<ServerResponse> getPosts(ServerRequest request) {
         return postService.getPosts()
@@ -49,10 +52,34 @@ public class PostHandler {
     }
 
     @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> setLike(ServerRequest request) {
+        Mono<String> accountId = getAccountId(request);
+        return postService
+                .setLike(accountId, request.pathVariable("id"))
+                .then(ServerResponse.noContent().build());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> removeLike(ServerRequest request) {
+        Mono<String> accountId = getAccountId(request);
+        return postService
+                .removeLike(accountId, request.pathVariable("id"))
+                .then(ServerResponse.noContent().build());
+    }
+
+    @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> deletePost(ServerRequest request) {
         var response = postService.deletePostById(request.pathVariable("id"))
                 .then(ServerResponse.noContent().build());
         return handleSecurity(request, response);
+    }
+
+    private Mono<String> getAccountId(ServerRequest request) {
+        return request
+                .principal()
+                .map(Principal::getName)
+                .flatMap(username -> accountService.findByUsername(Mono.just(username)))
+                .map(Account::getId);
     }
 
     private Mono<ServerResponse> handleSecurity(ServerRequest request, Mono<ServerResponse> responseMono) {

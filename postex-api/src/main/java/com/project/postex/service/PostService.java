@@ -44,4 +44,28 @@ public class PostService {
     public Mono<Void> deletePostById(String id) {
         return postRepository.deleteById(id);
     }
+
+    public Mono<Void> setLike(Mono<String> accountIdMono, String postId) {
+        return postRepository
+                .findById(postId)
+                .zipWith(accountIdMono)
+                .flatMap(tuple -> {
+                    var post = tuple.getT1();
+                    var accountId = tuple.getT2();
+                    post.getLikeAccountIds().add(accountId);
+                    return postRepository.save(post);
+                }).then(Mono.empty());
+    }
+
+    public Mono<Void> removeLike(Mono<String> accountIdMono, String postId) {
+        return postRepository
+                .findById(postId)
+                .zipWith(accountIdMono)
+                .flatMap(tuple -> {
+                    var post = tuple.getT1();
+                    var accountId = tuple.getT2();
+                    post.getLikeAccountIds().remove(accountId);
+                    return postRepository.save(post);
+                }).then(Mono.empty());
+    }
 }

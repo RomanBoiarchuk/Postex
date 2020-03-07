@@ -39,6 +39,8 @@ public class RouterConfig {
                 .route(GET("/posts"), postHandler::getPosts)
                 .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)
                 .andRoute(PUT("/posts/{id}").and(accept(APPLICATION_JSON)), postHandler::updatePost)
+                .andRoute(POST("/posts/{id}/likes"), postHandler::setLike)
+                .andRoute(DELETE("/posts/{id}/likes"), postHandler::removeLike)
                 .andRoute(DELETE("/posts/{id}"), postHandler::deletePost);
     }
 
