@@ -30,7 +30,13 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
-                .route(GET("/profile"), accountHandler::getProfile);
+                .route(GET("/profile"), accountHandler::getProfile)
+                .andRoute(GET("/profile/{id}"), accountHandler::getProfileById)
+                // friends, subscribers
+                .andRoute(GET("/profile/{id}/friends"), accountHandler::getFriends)
+                .andRoute(GET("/profile/{id}/subscribers"), accountHandler::getSubscribers)
+                .andRoute(POST("/friends/{id}"), accountHandler::addFriend)
+                .andRoute(DELETE("/friends/{id}"), accountHandler::removeFriend);
     }
 
     @Bean

@@ -1,6 +1,8 @@
 package com.project.postex.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,5 +36,10 @@ public class Account {
     @NotNull(message = "User can't be null.")
     private User user;
     @DBRef(lazy = true)
+    @EqualsAndHashCode.Exclude
     private List<Account> friends = new ArrayList<>();
+    @DBRef(lazy = true)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    private List<Account> subscribers = new ArrayList<>();
 }

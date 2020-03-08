@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
@@ -28,5 +29,49 @@ public class AccountHandler {
                 .flatMap(account -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
                         .body(BodyInserters.fromValue(account)));
+    }
+
+    public Mono<ServerResponse> getProfileById(ServerRequest request) {
+        var id = request.pathVariable("id");
+        return accountService.findById(id)
+                .flatMap(account ->
+                        ServerResponse.ok()
+                                .body(BodyInserters.fromValue(account)));
+    }
+
+    public Mono<ServerResponse> getFriends(ServerRequest request) {
+        var id = request.pathVariable("id");
+        Flux<Account> friends = accountService.findFriendsById(id);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(friends, Account.class);
+    }
+
+    public Mono<ServerResponse> getSubscribers(ServerRequest request) {
+        var id = request.pathVariable("id");
+        Flux<Account> subscribers = accountService.findSubscribersById(id);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(subscribers, Account.class);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> addFriend(ServerRequest request) {
+        Mono<String> username = request.principal().map(Principal::getName);
+        var friendId = request.pathVariable("id");
+        Mono<Account> account = accountService.findByUsername(username);
+        return accountService
+                .addFriendById(account, friendId)
+                .then(ServerResponse.noContent().build());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> removeFriend(ServerRequest request) {
+        Mono<String> username = request.principal().map(Principal::getName);
+        var friendId = request.pathVariable("id");
+        Mono<Account> account = accountService.findByUsername(username);
+        return accountService
+                .removeFriendById(account, friendId)
+                .then(ServerResponse.noContent().build());
     }
 }
