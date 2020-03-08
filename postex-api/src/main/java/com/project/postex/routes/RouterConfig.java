@@ -36,12 +36,18 @@ public class RouterConfig {
     @Bean
     public RouterFunction<ServerResponse> postRoutes() {
         return RouterFunctions
+                // posts
                 .route(GET("/posts"), postHandler::getPosts)
                 .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)
                 .andRoute(PUT("/posts/{id}").and(accept(APPLICATION_JSON)), postHandler::updatePost)
+                .andRoute(DELETE("/posts/{id}"), postHandler::deletePost)
+                // likes
                 .andRoute(POST("/posts/{id}/likes"), postHandler::setLike)
                 .andRoute(DELETE("/posts/{id}/likes"), postHandler::removeLike)
-                .andRoute(DELETE("/posts/{id}"), postHandler::deletePost);
+                // comments
+                .andRoute(GET("/posts/{postId}/comments"), postHandler::getCommentsByPostId)
+                .andRoute(POST("/posts/{postId}/comments")
+                        .and(accept(APPLICATION_JSON)), postHandler::createComment);
     }
 
 }

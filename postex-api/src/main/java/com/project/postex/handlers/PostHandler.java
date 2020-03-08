@@ -1,6 +1,7 @@
 package com.project.postex.handlers;
 
 import com.project.postex.models.Account;
+import com.project.postex.models.Comment;
 import com.project.postex.models.Post;
 import com.project.postex.service.AccountService;
 import com.project.postex.service.AuthorizationService;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -52,8 +54,15 @@ public class PostHandler {
     }
 
     @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> deletePost(ServerRequest request) {
+        var response = postService.deletePostById(request.pathVariable("id"))
+                .then(ServerResponse.noContent().build());
+        return handleSecurity(request, response);
+    }
+
+    @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> setLike(ServerRequest request) {
-        Mono<String> accountId = getAccountId(request);
+        Mono<String> accountId = getAccount(request).map(Account::getId);
         return postService
                 .setLike(accountId, request.pathVariable("id"))
                 .then(ServerResponse.noContent().build());
@@ -61,25 +70,35 @@ public class PostHandler {
 
     @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> removeLike(ServerRequest request) {
-        Mono<String> accountId = getAccountId(request);
+        Mono<String> accountId = getAccount(request).map(Account::getId);
         return postService
                 .removeLike(accountId, request.pathVariable("id"))
                 .then(ServerResponse.noContent().build());
     }
 
-    @PreAuthorize("isAuthenticated()")
-    public Mono<ServerResponse> deletePost(ServerRequest request) {
-        var response = postService.deletePostById(request.pathVariable("id"))
-                .then(ServerResponse.noContent().build());
-        return handleSecurity(request, response);
+    public Mono<ServerResponse> getCommentsByPostId(ServerRequest request) {
+        var postId = request.pathVariable("postId");
+        Flux<Comment> comments = postService.findCommentsByPostId(postId);
+        return ServerResponse.ok()
+                .body(comments, Comment.class);
     }
 
-    private Mono<String> getAccountId(ServerRequest request) {
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> createComment(ServerRequest request) {
+        Mono<Account> account = getAccount(request);
+        Mono<Comment> comment = request.bodyToMono(Comment.class);
+        return postService
+                .createComment(comment, account, request.pathVariable("postId"))
+                .flatMap(post -> ServerResponse
+                        .created(URI.create(String.format("/posts/%s", request.pathVariable("postId"))))
+                        .bodyValue(post));
+    }
+
+    private Mono<Account> getAccount(ServerRequest request) {
         return request
                 .principal()
                 .map(Principal::getName)
-                .flatMap(username -> accountService.findByUsername(Mono.just(username)))
-                .map(Account::getId);
+                .flatMap(username -> accountService.findByUsername(Mono.just(username)));
     }
 
     private Mono<ServerResponse> handleSecurity(ServerRequest request, Mono<ServerResponse> responseMono) {

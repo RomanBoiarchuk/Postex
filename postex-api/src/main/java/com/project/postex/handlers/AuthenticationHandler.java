@@ -10,8 +10,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ValidationException;
-
 @Component
 @AllArgsConstructor
 public class AuthenticationHandler {
@@ -21,11 +19,7 @@ public class AuthenticationHandler {
         return authService
                 .signUp(request.bodyToMono(Account.class))
                 .flatMap(token -> ServerResponse.ok()
-                        .body(BodyInserters.fromValue(token)))
-                .onErrorResume(IllegalArgumentException.class, e ->
-                        ServerResponse.badRequest().bodyValue(e.getMessage()))
-                .onErrorResume(ValidationException.class, e ->
-                        ServerResponse.badRequest().bodyValue(e.getMessage()));
+                        .body(BodyInserters.fromValue(token)));
     }
 
     public Mono<ServerResponse> signIn(ServerRequest request) {
