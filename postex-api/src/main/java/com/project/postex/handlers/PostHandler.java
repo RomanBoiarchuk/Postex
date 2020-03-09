@@ -3,6 +3,7 @@ package com.project.postex.handlers;
 import com.project.postex.models.Account;
 import com.project.postex.models.Comment;
 import com.project.postex.models.Post;
+import com.project.postex.repository.projections.PostInfo;
 import com.project.postex.service.AccountService;
 import com.project.postex.service.AuthorizationService;
 import com.project.postex.service.PostService;
@@ -27,11 +28,27 @@ public class PostHandler {
     private final AuthorizationService authorizationService;
     private final AccountService accountService;
 
+    @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> getPosts(ServerRequest request) {
-        return postService.getPosts()
-                .collectList()
-                .flatMap(posts -> ServerResponse.ok()
-                        .contentType(APPLICATION_JSON).bodyValue(posts));
+        var posts = request.principal().map(Principal::getName)
+                .flatMapMany(postService::findPostsByUsername);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON).body(posts, PostInfo.class);
+    }
+
+    public Mono<ServerResponse> getPost(ServerRequest request) {
+        Mono<Post> post = postService.findPostById(request.pathVariable("id"));
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(post, Post.class);
+    }
+
+    public Mono<ServerResponse> getPostsByAuthor(ServerRequest request) {
+        var authorId = request.pathVariable("id");
+        Flux<PostInfo> posts = postService.getPostsByAuthorId(authorId);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(posts, PostInfo.class);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -80,6 +97,7 @@ public class PostHandler {
         var postId = request.pathVariable("postId");
         Flux<Comment> comments = postService.findCommentsByPostId(postId);
         return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
                 .body(comments, Comment.class);
     }
 
@@ -91,6 +109,7 @@ public class PostHandler {
                 .createComment(comment, account, request.pathVariable("postId"))
                 .flatMap(post -> ServerResponse
                         .created(URI.create(String.format("/posts/%s", request.pathVariable("postId"))))
+                        .contentType(APPLICATION_JSON)
                         .bodyValue(post));
     }
 

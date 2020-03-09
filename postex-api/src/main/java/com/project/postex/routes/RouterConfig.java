@@ -43,7 +43,9 @@ public class RouterConfig {
     public RouterFunction<ServerResponse> postRoutes() {
         return RouterFunctions
                 // posts
-                .route(GET("/posts"), postHandler::getPosts)
+                .route(GET("/feed"), postHandler::getPosts)
+                .andRoute(GET("/profile/{id}/posts"), postHandler::getPostsByAuthor)
+                .andRoute(GET("/posts/{id}"), postHandler::getPost)
                 .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)
                 .andRoute(PUT("/posts/{id}").and(accept(APPLICATION_JSON)), postHandler::updatePost)
                 .andRoute(DELETE("/posts/{id}"), postHandler::deletePost)

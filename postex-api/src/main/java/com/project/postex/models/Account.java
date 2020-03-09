@@ -36,6 +36,7 @@ public class Account {
     @NotNull(message = "User can't be null.")
     private User user;
     @DBRef(lazy = true)
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Account> friends = new ArrayList<>();
     @DBRef(lazy = true)

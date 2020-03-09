@@ -6,15 +6,20 @@ import com.project.postex.models.Post;
 import com.project.postex.repository.AccountRepository;
 import com.project.postex.repository.PostRepository;
 import com.project.postex.repository.projections.CommentsOnly;
+import com.project.postex.repository.projections.PostInfo;
 import lombok.AllArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
@@ -46,8 +51,33 @@ public class PostService {
                 });
     }
 
-    public Flux<Post> getPosts() {
-        return postRepository.findAll();
+    public Flux<PostInfo> getPosts() {
+        return postRepository.findAll(PostInfo.class, sortByCreationTime());
+    }
+
+    private Sort sortByCreationTime() {
+        return Sort.by(DESC, "creationTime");
+    }
+
+    public Flux<PostInfo> findPostsByUsername(String username) {
+        return accountRepository
+                .findByUserUsername(username)
+                .map(Account::getFriends)
+                .map(friends -> friends.stream()
+                        .map(account -> new ObjectId(account.getId()))
+                        .collect(Collectors.toList()))
+                .flatMapMany(friendIds -> postRepository
+                        .findByAuthorIdIn(friendIds, sortByCreationTime(), PostInfo.class));
+    }
+
+    public Mono<Post> findPostById(String postId) {
+        return postRepository.findById(postId)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(NOT_FOUND, "Post not found!")));
+    }
+
+    public Flux<PostInfo> getPostsByAuthorId(String authorId) {
+        return postRepository
+                .findByAuthorId(authorId, sortByCreationTime(), PostInfo.class);
     }
 
     public Mono<Void> deletePostById(String id) {
@@ -100,7 +130,11 @@ public class PostService {
         return postRepository
                 .findById(postId, CommentsOnly.class)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(NOT_FOUND, "Post not found.")))
-                .map(CommentsOnly::getComments)
+                .map(result -> {
+                    var comments = result.getComments();
+                    comments.sort((Comparator.comparing(Comment::getCreationTime)));
+                    return comments;
+                })
                 .flatMapMany(Flux::fromIterable);
     }
 }
