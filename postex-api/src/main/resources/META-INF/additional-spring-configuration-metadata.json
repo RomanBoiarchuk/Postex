@@ -9,6 +9,11 @@
       "name": "app.jwt.expirationInMs",
       "type": "java.lang.String",
       "description": "Expiration time for JWT token in milliseconds."
+    },
+    {
+      "name": "app.allowedOrigins",
+      "type": "java.lang.String[]",
+      "description": "CORS: allowed origins."
     }
   ]
 }
