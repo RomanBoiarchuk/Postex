@@ -20,10 +20,9 @@ public class CorsConfig {
         var corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList(allowedOrigins));
         corsConfig.setMaxAge(8000L);
-        corsConfig.addAllowedMethod("GET");
-        corsConfig.addAllowedMethod("PUT");
-        corsConfig.addAllowedMethod("POST");
-        corsConfig.addAllowedMethod("DELETE");
+        corsConfig.addAllowedMethod("*");
+        corsConfig.addAllowedHeader("*");
+        corsConfig.setAllowCredentials(true);
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return new CorsWebFilter(source);

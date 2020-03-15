@@ -1,9 +1,11 @@
 package com.project.postex.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -43,4 +45,16 @@ public class Account {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Account> subscribers = new ArrayList<>();
+
+    @Transient
+    @JsonProperty("friendsCount")
+    public int getFriendsCount() {
+        return friends.size();
+    }
+
+    @Transient
+    @JsonProperty("subscribersCount")
+    public int getSubscribersCount() {
+        return subscribers.size();
+    }
 }
