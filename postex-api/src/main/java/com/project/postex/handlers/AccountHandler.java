@@ -1,6 +1,7 @@
 package com.project.postex.handlers;
 
 import com.project.postex.models.Account;
+import com.project.postex.models.views.Views;
 import com.project.postex.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.security.Principal;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.codec.json.Jackson2CodecSupport.JSON_VIEW_HINT;
 
 @Component
 @AllArgsConstructor
@@ -44,6 +46,7 @@ public class AccountHandler {
         Flux<Account> friends = accountService.findFriendsById(id);
         return ServerResponse.ok()
                 .contentType(APPLICATION_JSON)
+                .hint(JSON_VIEW_HINT, Views.Info.class)
                 .body(friends, Account.class);
     }
 
@@ -52,6 +55,7 @@ public class AccountHandler {
         Flux<Account> subscribers = accountService.findSubscribersById(id);
         return ServerResponse.ok()
                 .contentType(APPLICATION_JSON)
+                .hint(JSON_VIEW_HINT, Views.Info.class)
                 .body(subscribers, Account.class);
     }
 

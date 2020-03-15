@@ -38,7 +38,6 @@ export function Profile(props) {
                         <Link className='ml-3'
                               to={`/profile/${account.id}/subscribers`}>{account.subscribersCount} Subscribers</Link>
                     </Card.Text>
-                    <Card.Text className='mb-0'>{account.about}</Card.Text>
                 </Card.Body>
             </Card>
             <br/>

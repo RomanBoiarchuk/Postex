@@ -35,8 +35,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(username, username, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
-            return accountRepository.existsByUserUsername(username)
-                    .flatMap(exists -> exists ? Mono.just(auth) : Mono.empty());
+            return Mono.just(auth);
         } else {
             return Mono.empty();
         }
