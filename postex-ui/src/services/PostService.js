@@ -30,9 +30,11 @@ function getPost(id) {
 }
 
 function createPost(post) {
+    let headers = authHeader();
+    headers['Content-Type'] = 'application/json';
     return fetch(`${constants.apiBaseUrl}/posts`, {
         method: 'POST',
-        headers: authHeader(),
+        headers,
         body: JSON.stringify(post)
     })
         .then(handleResponse);

@@ -3,7 +3,7 @@ import './App.css';
 import {Menu} from "./components";
 import {Route, Switch} from "react-router";
 import {BrowserRouter} from "react-router-dom";
-import {ProfilePage, SignInPage, SignUpPage} from "./components/pages";
+import {HomePage, ProfilePage, SignInPage, SignUpPage} from "./components/pages";
 
 function App() {
     return (
@@ -14,11 +14,13 @@ function App() {
                 </Switch>
                 <div className="jumbotron">
                     <div className="container">
-                                <Switch>
-                                    <Route path="/signin" component={SignInPage}/>
-                                    <Route path="/signup" component={SignUpPage}/>
-                                    <Route path="/profile" component={ProfilePage}/>
-                                </Switch>
+                        <Switch>
+                            <Route path="/signin" component={SignInPage}/>
+                            <Route path="/signup" component={SignUpPage}/>
+                            <Route path="/profile" component={ProfilePage}/>
+                            <Route path="/home" component={HomePage}/>
+                            <Route exact path="/" component={HomePage}/>
+                        </Switch>
                     </div>
                 </div>
             </BrowserRouter>
