@@ -7,6 +7,22 @@
   display: inline-block;
 }
 
+.no-horizontal-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+.icon-hover:hover {
+  color: #0062cc
+}
+
+.icon-hover {
+  color: #17a2b8;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

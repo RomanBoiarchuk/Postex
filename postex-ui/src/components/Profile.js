@@ -18,7 +18,7 @@ export function Profile(props) {
                         height: '100px'
                     }}>
                         <Image width="150px" height="150px"
-                               src="default_profile_400x400.png" roundedCircle
+                               src="/default_profile_400x400.png" roundedCircle
                                style={{
                                    position: 'relative',
                                    top: '20%',

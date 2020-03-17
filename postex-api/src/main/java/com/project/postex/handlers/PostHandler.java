@@ -43,6 +43,18 @@ public class PostHandler {
                 .body(post, Post.class);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> getMyPosts(ServerRequest request) {
+        var usernameMono = request.principal().map(Principal::getName);
+        Flux<PostInfo> posts = accountService
+                .findByUsername(usernameMono)
+                .map(Account::getId)
+                .flatMapMany(postService::getPostsByAuthorId);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(posts, PostInfo.class);
+    }
+
     public Mono<ServerResponse> getPostsByAuthor(ServerRequest request) {
         var authorId = request.pathVariable("id");
         Flux<PostInfo> posts = postService.getPostsByAuthorId(authorId);

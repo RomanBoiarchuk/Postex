@@ -5,15 +5,23 @@ import React from "react";
 export function TagsInput(props) {
     let arrayHelpers = props.arrayHelpers;
     let values = props.values;
+    let addTagButton;
     return (
         <div>
             <InputGroup className="mb-3">
                 <FormControl
                     id="nextTag"
                     placeholder="#"
+                    onKeyPress={e => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addTagButton.click();
+                        }
+                    }}
                 />
                 <InputGroup.Append>
                     <Button variant="outline-primary"
+                            ref={button => addTagButton = button}
                             onClick={() => {
                                 let input = document.getElementById("nextTag");
                                 if (input.value.trim() !== '') {

@@ -44,6 +44,7 @@ public class RouterConfig {
         return RouterFunctions
                 // posts
                 .route(GET("/feed"), postHandler::getPosts)
+                .andRoute(GET("/profile/me/posts"), postHandler::getMyPosts)
                 .andRoute(GET("/profile/{id}/posts"), postHandler::getPostsByAuthor)
                 .andRoute(GET("/posts/{id}"), postHandler::getPost)
                 .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)

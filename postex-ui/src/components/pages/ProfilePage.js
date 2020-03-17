@@ -1,13 +1,15 @@
 import * as React from "react";
 import {Profile} from "../Profile";
-import {accountService, authenticationService} from "../../services";
+import {accountService, authenticationService, postService} from "../../services";
 import {Spinner} from "react-bootstrap";
+import {PostsList} from "../posts";
 
 export class ProfilePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            account: null
+            account: null,
+            posts: null
         }
     }
 
@@ -16,14 +18,17 @@ export class ProfilePage extends React.Component {
             this.props.history.push('/signin');
         } else {
             accountService.getProfile()
-                .then(account => this.setState({account: account}));
+                .then(account => this.setState({account}));
+            postService.getMyPosts()
+                .then(posts => this.setState({posts}))
         }
     }
 
     render() {
         let account = this.state.account;
+        let posts = this.state.posts;
         let spinner = (
-            <Spinner style={{position:'absolute', left:'50%'}} animation="border" role="status">
+            <Spinner style={{position: 'absolute', left: '50%'}} animation="border" role="status">
                 <span className="sr-only">Loading...</span>
             </Spinner>
         );
@@ -32,6 +37,8 @@ export class ProfilePage extends React.Component {
                 {(account &&
                     <Profile history={this.props.history} account={account}/>)
                 || spinner}
+                <br/>
+                {(posts && <PostsList posts={posts}/>) || spinner}
             </div>
         );
     }

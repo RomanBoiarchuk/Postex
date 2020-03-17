@@ -3,6 +3,7 @@ import {authHeader, handleResponse} from "../helpers";
 
 export const postService = {
     feed,
+    getMyPosts,
     getPostsByAuthor,
     getPost,
     createPost,
@@ -16,6 +17,11 @@ export const postService = {
 
 function feed() {
     return fetch(`${constants.apiBaseUrl}/feed`, {headers: authHeader()})
+        .then(handleResponse);
+}
+
+function getMyPosts() {
+    return fetch(`${constants.apiBaseUrl}/profile/me/posts`, {headers: authHeader()})
         .then(handleResponse);
 }
 
