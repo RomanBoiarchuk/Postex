@@ -3,6 +3,7 @@ import {authHeader, handleResponse} from "../helpers";
 
 export const accountService = {
     getProfile,
+    searchProfiles,
     getFriends,
     getSubscribers,
     addFriend,
@@ -17,6 +18,12 @@ function getProfile(id = null) {
         return fetch(`${constants.apiBaseUrl}/profile/${id}`, {headers: authHeader()})
             .then(handleResponse);
     }
+}
+
+function searchProfiles(search) {
+    let url = new URL(`${constants.apiBaseUrl}/profiles`);
+    url.search = new URLSearchParams({"search": search}).toString();
+    return fetch(url.toString()).then(handleResponse)
 }
 
 function getFriends(id) {

@@ -31,6 +31,7 @@ public class RouterConfig {
     public RouterFunction<ServerResponse> accountRoutes() {
         return RouterFunctions
                 .route(GET("/profile"), accountHandler::getProfile)
+                .andRoute(GET("/profiles"), accountHandler::searchProfiles)
                 .andRoute(GET("/profile/{id}"), accountHandler::getProfileById)
                 // friends, subscribers
                 .andRoute(GET("/profile/{id}/friends"), accountHandler::getFriends)

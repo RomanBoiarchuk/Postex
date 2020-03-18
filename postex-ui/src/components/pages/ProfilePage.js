@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Profile} from "../Profile";
+import {Profile} from "..";
 import {accountService, authenticationService, postService} from "../../services";
 import {Spinner} from "react-bootstrap";
 import {PostsList} from "../posts";

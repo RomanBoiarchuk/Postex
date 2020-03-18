@@ -3,6 +3,7 @@ package com.project.postex.repository;
 import com.project.postex.models.Account;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -13,6 +14,14 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Stri
     Mono<Account> findByUserUsernameIgnoreCase(String username);
 
     Mono<Account> findByUserUsername(String username);
+
+    Flux<Account> findByUserUsernameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+            String username, String firstName, String lastName);
+
+    default Flux<Account> search(String search) {
+        return findByUserUsernameContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+                search, search, search);
+    }
 
     @SuppressWarnings("SpringDataRepositoryMethodReturnTypeInspection")
     Mono<Boolean> existsByUserUsername(String username);

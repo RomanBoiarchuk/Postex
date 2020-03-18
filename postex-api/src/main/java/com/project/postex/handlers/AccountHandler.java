@@ -33,6 +33,14 @@ public class AccountHandler {
                         .body(BodyInserters.fromValue(account)));
     }
 
+    public Mono<ServerResponse> searchProfiles(ServerRequest request) {
+        var search = request.queryParam("search").orElse("");
+        Flux<Account> accounts = accountService.searchAccounts(search);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(accounts, Account.class);
+    }
+
     public Mono<ServerResponse> getProfileById(ServerRequest request) {
         var id = request.pathVariable("id");
         return accountService.findById(id)

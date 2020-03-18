@@ -5,12 +5,13 @@ import React from "react";
 export function TagsInput(props) {
     let arrayHelpers = props.arrayHelpers;
     let values = props.values;
+    let tagInput;
     let addTagButton;
     return (
         <div>
             <InputGroup className="mb-3">
                 <FormControl
-                    id="nextTag"
+                    ref={input => tagInput = input}
                     placeholder="#"
                     onKeyPress={e => {
                         if (e.key === 'Enter') {
@@ -23,10 +24,9 @@ export function TagsInput(props) {
                     <Button variant="outline-primary"
                             ref={button => addTagButton = button}
                             onClick={() => {
-                                let input = document.getElementById("nextTag");
-                                if (input.value.trim() !== '') {
-                                    arrayHelpers.push(input.value);
-                                    input.value = '';
+                                if (tagInput.value.trim() !== '') {
+                                    arrayHelpers.push(tagInput.value);
+                                    tagInput.value = '';
                                 }
                             }}
                     >Add a tag</Button>

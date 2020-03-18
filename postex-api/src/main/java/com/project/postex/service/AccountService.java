@@ -31,6 +31,10 @@ public class AccountService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(NOT_FOUND, "User not found!")));
     }
 
+    public Flux<Account> searchAccounts(String search) {
+        return accountRepository.search(search);
+    }
+
     public Flux<Account> findFriendsById(String accountId) {
         return accountRepository
                 .findById(accountId, FriendsOnly.class)

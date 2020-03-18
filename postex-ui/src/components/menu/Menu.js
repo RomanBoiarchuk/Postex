@@ -1,11 +1,11 @@
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
-import {authenticationService} from "../services";
+import {authenticationService} from "../../services";
 import {Link} from "react-router-dom";
+import {Search} from "./Search";
 
 export class Menu extends React.Component {
 
@@ -56,8 +56,7 @@ export class Menu extends React.Component {
                             }
                         </Nav>
                         <Form inline>
-                            <FormControl type="text" placeholder="#" className="mr-sm-2"/>
-                            <Button variant="outline-info">Search</Button>
+                            <Search history={this.props.history}/>
                             {(this.state.isSignedIn &&
                                 <Button className="ml-3"
                                         onClick={() => this.handleSignOut()}
