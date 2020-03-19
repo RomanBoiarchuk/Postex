@@ -11,6 +11,11 @@
   padding-left: 0;
   padding-right: 0;
 }
+
+.float-right {
+  float: right;
+}
+
 .icon-hover:hover {
   color: #0062cc
 }
