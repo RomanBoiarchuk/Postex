@@ -1,10 +1,9 @@
-import React from "react";
+import * as React from "react";
+import {accountService, authenticationService} from "../../services";
 import {CardColumns, Spinner} from "react-bootstrap";
 import {ProfileInfo} from "..";
-import {accountService} from "../../services";
 
-export class SearchProfilesPage extends React.Component {
-
+export class MyFriendsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,14 +11,14 @@ export class SearchProfilesPage extends React.Component {
         }
     }
 
-    getSearchParam() {
-        return new URLSearchParams(this.props.location.search).get('search');
-    }
-
     componentDidMount() {
-        accountService
-            .searchProfiles(this.getSearchParam())
-            .then(accounts => this.setState({accounts}));
+        if (!authenticationService.isSignedInSubject.value) {
+            this.props.history.push('/signin');
+        } else {
+            accountService
+                .getFriends(authenticationService.account.id)
+                .then(accounts => this.setState({accounts}));
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -43,7 +42,8 @@ export class SearchProfilesPage extends React.Component {
                 <CardColumns>
                     {(this.state.accounts &&
                         this.state.accounts.map(account =>
-                            <ProfileInfo key={account.id} className="mb-3" history={this.props.history} account={account}/>)
+                            <ProfileInfo key={account.id} className="mb-3" history={this.props.history}
+                                         account={account}/>)
                     ) || spinner}
                 </CardColumns>
             </>

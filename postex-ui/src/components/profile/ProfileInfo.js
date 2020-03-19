@@ -33,11 +33,6 @@ export function ProfileInfo(props) {
                 </Card.Title>
                 <Card.Text className='mb-0'>{account.user.username}</Card.Text>
                 <Card.Text className='mb-0'>Joined {dateStr}</Card.Text>
-                <Card.Text className='mb-0'>
-                    <Link to={`/profile/${account.id}/friends`}>{account.friendsCount} Following</Link>
-                    <Link className='ml-3'
-                          to={`/profile/${account.id}/subscribers`}>{account.subscribersCount} Subscribers</Link>
-                </Card.Text>
             </Card.Body>
         </Card>
     );

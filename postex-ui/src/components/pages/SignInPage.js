@@ -33,7 +33,7 @@ export class SignInPage extends React.Component {
                             setStatus();
                             authenticationService.signIn(username, password)
                                 .then(
-                                    token => {
+                                    account => {
                                         const {from} = this.props.location.state || {from: {pathname: "/"}};
                                         this.props.history.push(from);
                                     },

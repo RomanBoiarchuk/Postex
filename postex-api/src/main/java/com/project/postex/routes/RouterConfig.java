@@ -36,6 +36,7 @@ public class RouterConfig {
                 // friends, subscribers
                 .andRoute(GET("/profile/{id}/friends"), accountHandler::getFriends)
                 .andRoute(GET("/profile/{id}/subscribers"), accountHandler::getSubscribers)
+                .andRoute(GET("/friends/check/{id}"), accountHandler::checkIfMyFriend)
                 .andRoute(POST("/friends/{id}"), accountHandler::addFriend)
                 .andRoute(DELETE("/friends/{id}"), accountHandler::removeFriend);
     }

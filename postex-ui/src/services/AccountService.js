@@ -6,6 +6,7 @@ export const accountService = {
     searchProfiles,
     getFriends,
     getSubscribers,
+    checkIfFriend,
     addFriend,
     removeFriend
 }
@@ -36,18 +37,21 @@ function getSubscribers(id) {
         .then(handleResponse);
 }
 
+function checkIfFriend(id) {
+    return fetch(`${constants.apiBaseUrl}/friends/check/${id}`, {headers: authHeader()})
+        .then(handleResponse);
+}
+
 function addFriend(id) {
     return fetch(`${constants.apiBaseUrl}/friends/${id}`, {
         method: 'POST',
         headers: authHeader()
-    })
-        .then(handleResponse);
+    }).then(handleResponse);
 }
 
 function removeFriend(id) {
     return fetch(`${constants.apiBaseUrl}/friends/${id}`, {
         method: 'DELETE',
         headers: authHeader()
-    })
-        .then(handleResponse);
+    }).then(handleResponse);
 }

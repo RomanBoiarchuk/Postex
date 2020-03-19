@@ -44,7 +44,7 @@ export class SignUpPage extends React.Component {
                             setStatus();
                             authenticationService.signUp(account)
                                 .then(
-                                    token => {
+                                    account => {
                                         const {from} = this.props.location.state || {from: {pathname: "/"}};
                                         this.props.history.push(from);
                                     },

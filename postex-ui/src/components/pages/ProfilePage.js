@@ -1,7 +1,7 @@
 import * as React from "react";
-import {Profile} from "..";
-import {accountService, authenticationService, postService} from "../../services";
+import {accountService, postService} from "../../services";
 import {Spinner} from "react-bootstrap";
+import {Profile} from "..";
 import {PostsList} from "../posts";
 
 export class ProfilePage extends React.Component {
@@ -9,18 +9,24 @@ export class ProfilePage extends React.Component {
         super(props);
         this.state = {
             account: null,
-            posts: null
+            posts: null,
+            isFriend: null
         }
     }
 
     componentDidMount() {
-        if (!authenticationService.isSignedInSubject.value) {
-            this.props.history.push('/signin');
-        } else {
-            accountService.getProfile()
-                .then(account => this.setState({account}));
-            postService.getMyPosts()
-                .then(posts => this.setState({posts}))
+        let {id} = this.props.match.params;
+        accountService.getProfile(id)
+            .then(account => this.setState({account}));
+        postService.getPostsByAuthor(id)
+            .then(posts => this.setState({posts}));
+        accountService.checkIfFriend(id)
+            .then(isFriend => this.setState({isFriend}));
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps !== this.props) {
+            this.componentDidMount();
         }
     }
 
@@ -35,7 +41,7 @@ export class ProfilePage extends React.Component {
         return (
             <div>
                 {(account &&
-                    <Profile history={this.props.history} account={account}/>)
+                    <Profile history={this.props.history} account={account} isFriend={this.state.isFriend}/>)
                 || spinner}
                 <br/>
                 {(posts && <PostsList posts={posts}/>) || spinner}

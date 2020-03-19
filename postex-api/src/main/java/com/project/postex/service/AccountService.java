@@ -80,4 +80,11 @@ public class AccountService {
                     return accountRepository.saveAll(Arrays.asList(account, friend)).collectList();
                 }).then();
     }
+
+    public Mono<Boolean> isFriend(String username, String friendId) {
+        return accountRepository
+                .findByUserUsername(username)
+                .map(account -> account.getFriends().stream()
+                        .anyMatch(acc -> acc.getId().equals(friendId)));
+    }
 }

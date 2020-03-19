@@ -1,13 +1,24 @@
 import {Button, Card, Image} from "react-bootstrap";
 import React from "react";
 import {Link} from "react-router-dom";
+import {authenticationService} from "../../services";
 
 export function Profile(props) {
     const account = props.account;
+    const isFriend = props.isFriend || false;
     let signUpDate = new Date(account.signUpDate);
     let month = new Intl.DateTimeFormat('en', {month: 'long'}).format(signUpDate);
     let year = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(signUpDate);
     let dateStr = `${month} ${year}`;
+
+    const actionButton = () => {
+        if (authenticationService.account.id === account.id) {
+            return <Button style={{float: 'right'}} variant="primary">Edit</Button>;
+        }
+        return isFriend ? <Button style={{float: 'right'}} variant="primary">Unsubscribe</Button>
+            : <Button style={{float: 'right'}} variant="primary">Subscribe</Button>
+    };
+
     return (
         <div>
             <Card border="info">
@@ -28,11 +39,11 @@ export function Profile(props) {
                 </Card.Header>
                 <Card.Body>
                     <div className="mb-5">
-                        <Button style={{float: 'right'}} variant="primary">Edit</Button>
+                        {actionButton()}
                     </div>
                     <Card.Title className='mb-0'>{`${account.firstName} ${account.lastName}`}</Card.Title>
                     <Card.Text className='mb-0'>{account.user.username}</Card.Text>
-                    <Card.Text className='mb-0'>Joined {dateStr}</Card.Text>
+                    <Card.Text className='mb-0'>Joined { dateStr}</Card.Text>
                     <Card.Text className='mb-0'>
                         <Link to={`/profile/${account.id}/friends`}>{account.friendsCount} Following</Link>
                         <Link className='ml-3'

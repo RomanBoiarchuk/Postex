@@ -3,17 +3,22 @@ import {constants} from "../constants";
 import {handleResponse} from "../helpers";
 
 const isSignedInSubject = new BehaviorSubject(localStorage.getItem("token") != null);
+const accountSubject = new BehaviorSubject(JSON.parse(localStorage.getItem("account")));
 
 export const authenticationService = {
     signUp,
     signIn,
     signOut,
     isSignedInSubject,
+    accountSubject,
     get authToken() {
-        return localStorage.getItem("token")
+        return localStorage.getItem("token");
     },
     get isSignedIn() {
-        return isSignedInSubject.value
+        return isSignedInSubject.value;
+    },
+    get account() {
+        return accountSubject.value;
     }
 }
 
@@ -26,10 +31,11 @@ function signUp(account) {
 
     return fetch(`${constants.apiBaseUrl}/signup`, requestOptions)
         .then(handleResponse)
-        .then(token => {
-            localStorage.setItem('token', token.toString());
+        .then(body => {
+            localStorage.setItem('token', body.token.toString());
+            localStorage.setItem('account', JSON.stringify(body.account))
             isSignedInSubject.next(true);
-            return token;
+            return body.account;
         });
 }
 
@@ -42,14 +48,16 @@ function signIn(username, password) {
 
     return fetch(`${constants.apiBaseUrl}/signin`, requestOptions)
         .then(handleResponse)
-        .then(token => {
-            localStorage.setItem('token', token.toString());
+        .then(body => {
+            localStorage.setItem('token', body.token.toString());
+            localStorage.setItem('account', JSON.stringify(body.account))
             isSignedInSubject.next(true);
-            return token;
+            return body.account;
         });
 }
 
 function signOut() {
     localStorage.removeItem("token");
+    localStorage.removeItem("account");
     isSignedInSubject.next(false);
 }

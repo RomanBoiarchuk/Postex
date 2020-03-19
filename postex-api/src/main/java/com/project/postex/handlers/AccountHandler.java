@@ -38,6 +38,7 @@ public class AccountHandler {
         Flux<Account> accounts = accountService.searchAccounts(search);
         return ServerResponse.ok()
                 .contentType(APPLICATION_JSON)
+                .hint(JSON_VIEW_HINT, Views.Info.class)
                 .body(accounts, Account.class);
     }
 
@@ -65,6 +66,17 @@ public class AccountHandler {
                 .contentType(APPLICATION_JSON)
                 .hint(JSON_VIEW_HINT, Views.Info.class)
                 .body(subscribers, Account.class);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> checkIfMyFriend(ServerRequest request) {
+        var friendId = request.pathVariable("id");
+        Mono<Boolean> isFriend = request.principal()
+                .map(Principal::getName)
+                .flatMap(username -> accountService.isFriend(username, friendId));
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(isFriend, Boolean.class);
     }
 
     @PreAuthorize("isAuthenticated()")

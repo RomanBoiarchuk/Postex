@@ -2,7 +2,7 @@ import {authenticationService} from "../services";
 
 export function handleResponse(response) {
     return response.text().then(text => {
-        const data = text && (/^{|\[/.test(text) ? JSON.parse(text) : text);
+        const data = text && (/((^{|\[)|true$|false$)/.test(text) ? JSON.parse(text) : text);
         if (!response.ok) {
             if (response.status === 401) {
                 authenticationService.signOut();
