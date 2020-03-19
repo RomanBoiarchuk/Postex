@@ -28,10 +28,10 @@ public class PostHandler {
     private final AuthorizationService authorizationService;
     private final AccountService accountService;
 
-    @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> getPosts(ServerRequest request) {
         var posts = request.principal().map(Principal::getName)
-                .flatMapMany(postService::findPostsByUsername);
+                .flatMapMany(postService::findPostsByUsername)
+                .switchIfEmpty(postService.getPosts());
         return ServerResponse.ok()
                 .contentType(APPLICATION_JSON).body(posts, PostInfo.class);
     }

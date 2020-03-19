@@ -1,5 +1,5 @@
 import * as React from "react";
-import {accountService, postService} from "../../services";
+import {accountService, authenticationService, postService} from "../../services";
 import {Spinner} from "react-bootstrap";
 import {Profile} from "..";
 import {PostsList} from "../posts";
@@ -20,8 +20,10 @@ export class ProfilePage extends React.Component {
             .then(account => this.setState({account}));
         postService.getPostsByAuthor(id)
             .then(posts => this.setState({posts}));
-        accountService.checkIfFriend(id)
-            .then(isFriend => this.setState({isFriend}));
+        if (authenticationService.isSignedIn) {
+            accountService.checkIfFriend(id)
+                .then(isFriend => this.setState({isFriend}));
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

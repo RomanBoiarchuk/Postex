@@ -35,6 +35,7 @@ function signUp(account) {
             localStorage.setItem('token', body.token.toString());
             localStorage.setItem('account', JSON.stringify(body.account))
             isSignedInSubject.next(true);
+            accountSubject.next(body.account);
             return body.account;
         });
 }
@@ -52,6 +53,7 @@ function signIn(username, password) {
             localStorage.setItem('token', body.token.toString());
             localStorage.setItem('account', JSON.stringify(body.account))
             isSignedInSubject.next(true);
+            accountSubject.next(body.account);
             return body.account;
         });
 }

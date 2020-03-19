@@ -29,7 +29,7 @@ export function Profile(props) {
     };
 
     const actionButton = () => {
-        if (authenticationService.account.id === account.id) {
+        if (authenticationService.account?.id === account.id) {
             return <Button className="float-right" variant="primary">Edit</Button>;
         }
         return isFriend
@@ -57,7 +57,7 @@ export function Profile(props) {
                 </Card.Header>
                 <Card.Body>
                     <div className="mb-5">
-                        {actionButton()}
+                        {authenticationService.isSignedIn && actionButton()}
                     </div>
                     <Card.Title className='mb-0'>{`${account.firstName} ${account.lastName}`}</Card.Title>
                     <Card.Text className='mb-0'>{account.user.username}</Card.Text>
