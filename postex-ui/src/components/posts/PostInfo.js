@@ -1,8 +1,10 @@
 import {Card, Image} from "react-bootstrap";
-import React from "react";
+import React, {useState} from "react";
 import {generatePath, Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCommentAlt, faThumbsUp} from "@fortawesome/free-regular-svg-icons";
+import {faThumbsUp as faThumbsUpSolid} from "@fortawesome/free-solid-svg-icons";
+import {authenticationService, postService} from "../../services";
 
 export function PostInfo(props) {
     let post = props.post;
@@ -14,6 +16,38 @@ export function PostInfo(props) {
     };
     let creationTime = new Intl.DateTimeFormat([], dateTimeOptions)
         .format(new Date(post.creationTime));
+
+    const [likeState, setLikeState] = useState({
+        isLiked: post.likeAccountIds.includes(authenticationService.account?.id),
+        likesCount: post.likesCount
+    });
+
+    const setLike = () => {
+        postService.setLike(post.id)
+            .then(() => {
+                setLikeState({
+                    isLiked: true,
+                    likesCount: likeState.likesCount + 1
+                });
+            });
+    };
+
+    const removeLike = () => {
+        postService.removeLike(post.id)
+            .then(() => {
+                setLikeState({
+                    isLiked: false,
+                    likesCount: likeState.likesCount - 1
+                });
+            });
+    };
+
+    const likeIcon = likeState.isLiked
+        ? <span className="icon-hover pointer mr-5" onClick={removeLike}>{likeState.likesCount} <FontAwesomeIcon
+            icon={faThumbsUpSolid}/></span>
+        : <span className="icon-hover pointer mr-5" onClick={setLike}>{likeState.likesCount} <FontAwesomeIcon
+            icon={faThumbsUp}/></span>;
+
     return (
         <>
             <Card border="info">
@@ -41,8 +75,7 @@ export function PostInfo(props) {
                             }
                         </div>
                         <div className="mb-2">
-                            <span className="icon-hover pointer mr-5">{post.likesCount} <FontAwesomeIcon
-                                icon={faThumbsUp}/></span>
+                            {likeIcon}
                             <span className="icon-hover pointer">{post.commentsCount} <FontAwesomeIcon
                                 icon={faCommentAlt}/></span>
                         </div>
