@@ -80,6 +80,11 @@ public class PostService {
                 .findByAuthorId(authorId, sortByCreationTime(), PostInfo.class);
     }
 
+    public Flux<PostInfo> findByTag(String tag) {
+        return postRepository
+                .findByTagsContaining(tag, sortByCreationTime(), PostInfo.class);
+    }
+
     public Mono<Void> deletePostById(String id) {
         return postRepository.deleteById(id);
     }

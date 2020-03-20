@@ -49,6 +49,7 @@ public class RouterConfig {
                 .andRoute(GET("/profile/me/posts"), postHandler::getMyPosts)
                 .andRoute(GET("/profile/{id}/posts"), postHandler::getPostsByAuthor)
                 .andRoute(GET("/posts/{id}"), postHandler::getPost)
+                .andRoute(GET("/posts"), postHandler::findPosts)
                 .andRoute(POST("/posts").and(accept(APPLICATION_JSON)), postHandler::createPost)
                 .andRoute(PUT("/posts/{id}").and(accept(APPLICATION_JSON)), postHandler::updatePost)
                 .andRoute(DELETE("/posts/{id}"), postHandler::deletePost)

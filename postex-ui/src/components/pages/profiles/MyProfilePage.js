@@ -1,8 +1,8 @@
 import * as React from "react";
-import {Profile} from "..";
-import {accountService, authenticationService, postService} from "../../services";
+import {Profile} from "../../index";
+import {accountService, authenticationService, postService} from "../../../services";
 import {Spinner} from "react-bootstrap";
-import {PostsList} from "../posts";
+import {PostsList} from "../../posts";
 
 export class MyProfilePage extends React.Component {
     constructor(props) {

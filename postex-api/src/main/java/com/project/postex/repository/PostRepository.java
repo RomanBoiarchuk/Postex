@@ -18,6 +18,7 @@ public interface PostRepository extends ReactiveMongoRepository<Post, String> {
             "commentsCount: {$size: '$comments'} } }";
     String matchAuthorId = "{ $match : { 'author.id' : :#{#authorId} } }";
     String matchAuthorIdIn = "{ $match : { 'author.$id' : { $in : :#{#authorIds} } } }";
+    String matchContainsTag = "{ $match : { 'tags' : { '$eq' : :#{#tag} } } }";
 
     @Aggregation(addLikesAndCommentsCount)
     <T> Flux<T> findAll(Class<T> type, Sort sort);
@@ -29,4 +30,7 @@ public interface PostRepository extends ReactiveMongoRepository<Post, String> {
 
     @Aggregation(pipeline = {matchAuthorIdIn, addLikesAndCommentsCount})
     <T> Flux<T> findByAuthorIdIn(Collection<ObjectId> authorIds, Sort sort, Class<T> type);
+
+    @Aggregation(pipeline = {matchContainsTag, addLikesAndCommentsCount})
+    <T> Flux<T> findByTagsContaining(String tag, Sort sort, Class<T> type);
 }

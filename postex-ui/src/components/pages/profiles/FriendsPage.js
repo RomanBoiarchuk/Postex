@@ -1,9 +1,9 @@
 import * as React from "react";
-import {accountService, authenticationService} from "../../services";
+import {accountService} from "../../../services";
 import {CardColumns, Spinner} from "react-bootstrap";
-import {ProfileInfo} from "..";
+import {ProfileInfo} from "../..";
 
-export class MyFriendsPage extends React.Component {
+export class FriendsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -12,19 +12,14 @@ export class MyFriendsPage extends React.Component {
     }
 
     componentDidMount() {
-        if (!authenticationService.isSignedInSubject.value) {
-            this.props.history.push('/signin');
-        } else {
-            accountService
-                .getFriends(authenticationService.account.id)
-                .then(accounts => this.setState({accounts}));
-        }
+        let {id} = this.props.match.params;
+        accountService
+            .getFriends(id)
+            .then(accounts => this.setState({accounts}));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps !== this.props) {
-            console.log(prevProps);
-            console.log(this.props);
             this.componentDidMount();
         }
     }

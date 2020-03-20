@@ -63,6 +63,15 @@ public class PostHandler {
                 .body(posts, PostInfo.class);
     }
 
+    public Mono<ServerResponse> findPosts(ServerRequest request) {
+        var searchTag = request.queryParam("tag").orElse(null);
+        Flux<PostInfo> posts = searchTag != null ? postService.findByTag(searchTag)
+                : postService.getPosts();
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .body(posts, PostInfo.class);
+    }
+
     @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> createPost(ServerRequest request) {
         Mono<String> username = request.principal().map(Principal::getName);

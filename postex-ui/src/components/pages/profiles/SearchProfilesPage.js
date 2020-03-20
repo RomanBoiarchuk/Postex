@@ -1,7 +1,7 @@
 import React from "react";
 import {CardColumns, Spinner} from "react-bootstrap";
-import {ProfileInfo} from "..";
-import {accountService} from "../../services";
+import {ProfileInfo} from "../../index";
+import {accountService} from "../../../services";
 
 export class SearchProfilesPage extends React.Component {
 

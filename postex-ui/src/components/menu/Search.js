@@ -23,8 +23,8 @@ export function Search({history}) {
                     onClick={() => {
                         let value = searchInput.value.trim();
                         if (value === '') return;
-                        if (value.startsWith('#')) {
-                            history.push(generatePath('/posts?tag=:tag', {tag: value}));
+                        if (value.startsWith('#') && value.length > 1) {
+                            history.push(generatePath('/posts?tag=:tag', {tag: value.substr(1)}));
                         } else {
                             history.push(generatePath('/profiles?search=:name', {name:value}));
                         }

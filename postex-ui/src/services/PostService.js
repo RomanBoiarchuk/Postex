@@ -5,6 +5,7 @@ export const postService = {
     feed,
     getMyPosts,
     getPostsByAuthor,
+    findPostsByTag,
     getPost,
     createPost,
     updatePost,
@@ -28,6 +29,12 @@ function getMyPosts() {
 function getPostsByAuthor(id) {
     return fetch(`${constants.apiBaseUrl}/profile/${id}/posts`, {headers: authHeader()})
         .then(handleResponse);
+}
+
+function findPostsByTag(tag) {
+    let url = new URL(`${constants.apiBaseUrl}/posts`);
+    url.search = new URLSearchParams({"tag": tag}).toString();
+    return fetch(url.toString()).then(handleResponse);
 }
 
 function getPost(id) {
