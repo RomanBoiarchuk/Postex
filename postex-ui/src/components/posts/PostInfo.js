@@ -5,6 +5,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCommentAlt, faThumbsUp} from "@fortawesome/free-regular-svg-icons";
 import {faThumbsUp as faThumbsUpSolid} from "@fortawesome/free-solid-svg-icons";
 import {authenticationService, postService} from "../../services";
+import {Comment} from "../Comment";
+import {AddComment} from "../forms";
 
 export function PostInfo(props) {
     let post = props.post;
@@ -21,6 +23,14 @@ export function PostInfo(props) {
         isLiked: post.likeAccountIds.includes(authenticationService.account?.id),
         likesCount: post.likesCount
     });
+
+    const [commentsState, setCommentsState] = useState({
+        comments: null,
+        showComments: false,
+        commentsCount: post.commentsCount
+    });
+
+    let areCommentsLoading = false;
 
     const setLike = () => {
         postService.setLike(post.id)
@@ -41,6 +51,37 @@ export function PostInfo(props) {
                 });
             });
     };
+
+    const updateComments = comments => {
+        setCommentsState({
+            comments, showComments: true,
+            commentsCount: commentsState.commentsCount + 1
+        });
+    }
+
+    const toggleComments = () => {
+        if (areCommentsLoading) return;
+        if (commentsState.comments == null) {
+            areCommentsLoading = true;
+            postService.getCommentsByPost(post.id)
+                .then(comments => {
+                    setCommentsState({
+                        comments: comments,
+                        showComments: !commentsState.showComments,
+                        commentsCount: commentsState.commentsCount
+                    });
+                    areCommentsLoading = false;
+                }, error => {
+                    areCommentsLoading = false;
+                });
+        } else {
+            setCommentsState({
+                showComments: !commentsState.showComments,
+                comments: commentsState.comments,
+                commentsCount: commentsState.commentsCount
+            });
+        }
+    }
 
     const likeIcon = likeState.isLiked
         ? <span className="icon-hover pointer mr-5" onClick={removeLike}>{likeState.likesCount} <FontAwesomeIcon
@@ -76,11 +117,20 @@ export function PostInfo(props) {
                         </div>
                         <div className="mb-2">
                             {likeIcon}
-                            <span className="icon-hover pointer">{post.commentsCount} <FontAwesomeIcon
-                                icon={faCommentAlt}/></span>
+                            <span className="icon-hover pointer" onClick={toggleComments}>
+                                {commentsState.commentsCount} <FontAwesomeIcon icon={faCommentAlt}/>
+                            </span>
                         </div>
                     </div>
                 </div>
+                {commentsState.showComments &&
+                <Card.Footer>
+                    <AddComment onSubmit={updateComments} post={post}/>
+                    {commentsState.comments.map(comment =>
+                        <Comment key={comment.id} comment={comment}/>
+                    )}
+                </Card.Footer>
+                }
             </Card>
             <br/>
         </>

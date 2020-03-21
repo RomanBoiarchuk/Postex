@@ -92,9 +92,11 @@ function getCommentsByPost(id) {
 }
 
 function createComment(id, comment) {
+    let headers = authHeader();
+    headers['Content-Type'] = 'application/json';
     return fetch(`${constants.apiBaseUrl}/posts/${id}/comments`, {
         method: 'POST',
-        headers: authHeader(),
+        headers: headers,
         body: JSON.stringify(comment)
     })
         .then(handleResponse);
