@@ -30,7 +30,7 @@ export function Profile(props) {
 
     const actionButton = () => {
         if (authenticationService.account?.id === account.id) {
-            return <Button className="float-right" variant="primary">Edit</Button>;
+            return null;
         }
         return isFriend
             ? <Button className="float-right" onClick={removeFriend} variant="primary">Unsubscribe</Button>
