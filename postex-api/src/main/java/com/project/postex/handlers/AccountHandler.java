@@ -1,6 +1,6 @@
 package com.project.postex.handlers;
 
-import com.project.postex.models.Account;
+import com.project.postex.models.mongo.Account;
 import com.project.postex.models.views.Views;
 import com.project.postex.service.AccountService;
 import lombok.AllArgsConstructor;

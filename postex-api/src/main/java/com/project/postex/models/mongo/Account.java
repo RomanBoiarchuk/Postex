@@ -1,6 +1,7 @@
-package com.project.postex.models;
+package com.project.postex.models.mongo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.project.postex.models.views.Views;
@@ -56,6 +57,10 @@ public class Account {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Account> subscribers = new ArrayList<>();
+    @Transient
+    @EqualsAndHashCode.Exclude
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer connectionDegree;
 
     @Transient
     @JsonProperty(value = "friendsCount", access = READ_ONLY)

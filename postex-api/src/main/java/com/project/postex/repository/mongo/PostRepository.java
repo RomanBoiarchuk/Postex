@@ -1,6 +1,6 @@
-package com.project.postex.repository;
+package com.project.postex.repository.mongo;
 
-import com.project.postex.models.Post;
+import com.project.postex.models.mongo.Post;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.Aggregation;
