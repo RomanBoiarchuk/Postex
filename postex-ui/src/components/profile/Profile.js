@@ -1,11 +1,11 @@
-import {Button, Card, Image} from "react-bootstrap";
+import {Badge, Button, Card, Image} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {accountService, authenticationService} from "../../services";
 
 export function Profile(props) {
     const account = props.account;
-    let signUpDate = new Date(account.signUpDate);
+    let signUpDate = new Date(account.signUpDate ? account.signUpDate : null);
     let month = new Intl.DateTimeFormat('en', {month: 'long'}).format(signUpDate);
     let year = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(signUpDate);
     let dateStr = `${month} ${year}`;

@@ -1,6 +1,6 @@
 package com.project.postex.repository.projections;
 
-import com.project.postex.models.Account;
+import com.project.postex.models.mongo.Account;
 import lombok.Value;
 
 import java.time.LocalDateTime;

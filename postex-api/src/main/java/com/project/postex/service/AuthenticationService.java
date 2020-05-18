@@ -1,9 +1,11 @@
 package com.project.postex.service;
 
-import com.project.postex.models.Account;
-import com.project.postex.models.User;
 import com.project.postex.models.dto.AuthResponseDTO;
-import com.project.postex.repository.AccountRepository;
+import com.project.postex.models.mongo.Account;
+import com.project.postex.models.mongo.User;
+import com.project.postex.models.neo4j.AccountNode;
+import com.project.postex.repository.mongo.AccountRepository;
+import com.project.postex.repository.neo4j.AccountNodeRepository;
 import com.project.postex.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public class AuthenticationService {
     private final AccountRepository accountRepository;
+    private final AccountNodeRepository accountNodeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final Validator validator;
@@ -40,8 +43,14 @@ public class AuthenticationService {
                         .findByUserUsernameIgnoreCase(account.getUser().getUsername())
                         .flatMap(__ -> Mono.error(new ResponseStatusException(CONFLICT, "User already exists!")))
                         .switchIfEmpty(accountRepository.save(account))
-                        .cast(Account.class))
-                .map(this::toResponse);
+                        .cast(Account.class)
+                        .doOnNext(savedAccount -> {
+                            var accountNode = new AccountNode();
+                            accountNode.setId(savedAccount.getId());
+                            accountNode.setUsername(savedAccount.getUser().getUsername());
+                            accountNodeRepository.save(accountNode).subscribe();
+                        })
+                ).map(this::toResponse);
     }
 
     public Mono<AuthResponseDTO> signIn(Mono<User> userMono) {

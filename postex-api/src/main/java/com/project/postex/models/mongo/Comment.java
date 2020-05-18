@@ -1,4 +1,4 @@
-package com.project.postex.models;
+package com.project.postex.models.mongo;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

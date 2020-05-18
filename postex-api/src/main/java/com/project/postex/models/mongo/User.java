@@ -1,4 +1,4 @@
-package com.project.postex.models;
+package com.project.postex.models.mongo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;

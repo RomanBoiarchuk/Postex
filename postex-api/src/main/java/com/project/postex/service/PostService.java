@@ -1,10 +1,10 @@
 package com.project.postex.service;
 
-import com.project.postex.models.Account;
-import com.project.postex.models.Comment;
-import com.project.postex.models.Post;
-import com.project.postex.repository.AccountRepository;
-import com.project.postex.repository.PostRepository;
+import com.project.postex.models.mongo.Account;
+import com.project.postex.models.mongo.Comment;
+import com.project.postex.models.mongo.Post;
+import com.project.postex.repository.mongo.AccountRepository;
+import com.project.postex.repository.mongo.PostRepository;
 import com.project.postex.repository.projections.CommentsOnly;
 import com.project.postex.repository.projections.PostInfo;
 import lombok.AllArgsConstructor;

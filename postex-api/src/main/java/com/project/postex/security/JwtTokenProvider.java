@@ -1,6 +1,6 @@
 package com.project.postex.security;
 
-import com.project.postex.models.User;
+import com.project.postex.models.mongo.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
