@@ -11,4 +11,9 @@ import reactor.core.publisher.Mono;
 public interface AccountNodeRepository extends ReactiveNeo4jRepository<AccountNode, String> {
     @Query("MATCH(a:Account {id: $accountId})-[s:SUBSCRIBED_ON]->(f:Account) WHERE f.id = $friendId DELETE s")
     Mono<Void> detachFriend(@Param("accountId") String accountId, @Param("friendId") String friendId);
+
+    @Query("MATCH p=shortestPath(" +
+            "(a1:Account {id: $account1Id})-[SUBSCRIBED_ON*..5]->(a2:Account {id: $account2Id})" +
+            ") RETURN length(p)")
+    Mono<Integer> getShortestPathLength(@Param("account1Id") String account1Id, @Param("account2Id") String account2Id);
 }

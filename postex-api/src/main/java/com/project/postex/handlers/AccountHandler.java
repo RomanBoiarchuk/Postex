@@ -44,10 +44,10 @@ public class AccountHandler {
 
     public Mono<ServerResponse> getProfileById(ServerRequest request) {
         var id = request.pathVariable("id");
-        return accountService.findById(id)
-                .flatMap(account ->
+        return accountService.getAccountProfile(id, request.principal())
+                .flatMap(profile ->
                         ServerResponse.ok()
-                                .body(BodyInserters.fromValue(account)));
+                                .body(BodyInserters.fromValue(profile)));
     }
 
     public Mono<ServerResponse> getFriends(ServerRequest request) {
