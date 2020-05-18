@@ -4,7 +4,7 @@ import React from "react";
 
 export function ProfileInfo(props) {
     const account = props.account;
-    let signUpDate = new Date(account.signUpDate);
+    let signUpDate = new Date(account.signUpDate ? account.signUpDate : null);
     let month = new Intl.DateTimeFormat('en', {month: 'long'}).format(signUpDate);
     let year = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(signUpDate);
     let dateStr = `${month} ${year}`;
