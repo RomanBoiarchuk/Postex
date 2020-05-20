@@ -6,6 +6,7 @@ export const accountService = {
     searchProfiles,
     getFriends,
     getSubscribers,
+    getRecommendations,
     checkIfFriend,
     addFriend,
     removeFriend
@@ -34,6 +35,11 @@ function getFriends(id) {
 
 function getSubscribers(id) {
     return fetch(`${constants.apiBaseUrl}/profile/${id}/subscribers`, {headers: authHeader()})
+        .then(handleResponse);
+}
+
+function getRecommendations() {
+    return fetch(`${constants.apiBaseUrl}/friends/recommendations`, {headers: authHeader()})
         .then(handleResponse);
 }
 
