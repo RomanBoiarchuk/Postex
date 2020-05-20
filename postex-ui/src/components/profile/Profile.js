@@ -58,6 +58,11 @@ export function Profile(props) {
                 <Card.Body>
                     <div className="mb-5">
                         {authenticationService.isSignedIn && actionButton()}
+                        {account.connectionDegree &&
+                        <Button className="float-right mr-2" variant="primary" disabled>
+                            Connection degree <Badge variant="light">{account.connectionDegree}</Badge>
+                        </Button>
+                        }
                     </div>
                     <Card.Title className='mb-0'>{`${account.firstName} ${account.lastName}`}</Card.Title>
                     <Card.Text className='mb-0'>{account.user.username}</Card.Text>
@@ -70,7 +75,7 @@ export function Profile(props) {
                 </Card.Body>
             </Card>
             <br/>
-            {(account.about !== null && account.about.trim() !== "") &&
+            {(account.about && account.about.trim() !== "") &&
             <Card border="info">
                 <Card.Header>About</Card.Header>
                 <Card.Body>
