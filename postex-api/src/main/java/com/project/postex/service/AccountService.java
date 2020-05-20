@@ -38,7 +38,7 @@ public class AccountService {
         return principal.map(Principal::getName)
                 .flatMap(accountRepository::findByUserUsername)
                 .flatMap(signedInAccount -> signedInAccount.getId().equals(accountId) ? Mono.empty()
-                        : accountNodeRepository.getShortestPathLength(signedInAccount.getId(), accountId))
+                        : accountNodeRepository.findShortestPathLength(signedInAccount.getId(), accountId))
                 .zipWith(findById(accountId))
                 .map(tuple -> {
                     var account = tuple.getT2();
@@ -66,6 +66,13 @@ public class AccountService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(NOT_FOUND, "User not found!")))
                 .map(SubscribersOnly::getSubscribers)
                 .flatMapMany(Flux::fromIterable);
+    }
+
+    public Flux<Account> findFriendsRecommendations(Mono<Account> account) {
+        return account.map(Account::getId)
+                .flatMapMany(accountNodeRepository::findFriendsRecommendations)
+                .collectList()
+                .flatMapMany(ids -> accountRepository.findByIdIn(ids, Account.class));
     }
 
     public Mono<Void> addFriendById(Mono<Account> accountMono, String friendId) {

@@ -80,6 +80,17 @@ public class AccountHandler {
     }
 
     @PreAuthorize("isAuthenticated()")
+    public Mono<ServerResponse> getFriendsRecommendations(ServerRequest request) {
+        Mono<String> username = request.principal().map(Principal::getName);
+        Mono<Account> accountMono = accountService.findByUsername(username);
+        Flux<Account> recommendations = accountService.findFriendsRecommendations(accountMono);
+        return ServerResponse.ok()
+                .contentType(APPLICATION_JSON)
+                .hint(JSON_VIEW_HINT, Views.Info.class)
+                .body(recommendations, Account.class);
+    }
+
+    @PreAuthorize("isAuthenticated()")
     public Mono<ServerResponse> addFriend(ServerRequest request) {
         Mono<String> username = request.principal().map(Principal::getName);
         var friendId = request.pathVariable("id");

@@ -7,7 +7,8 @@ export class MyFriendsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            accounts: null
+            accounts: null,
+            recommendations: null
         }
     }
 
@@ -18,6 +19,10 @@ export class MyFriendsPage extends React.Component {
             accountService
                 .getFriends(authenticationService.account.id)
                 .then(accounts => this.setState({accounts}));
+
+            accountService.getRecommendations()
+                .then(recommendations => this.setState({recommendations}));
+
         }
     }
 
@@ -28,6 +33,7 @@ export class MyFriendsPage extends React.Component {
     }
 
     render() {
+        let recommendations = this.state.recommendations;
 
         let spinner = (
             <Spinner style={{position: 'absolute', left: '50%'}} animation="border" role="status">
@@ -40,6 +46,14 @@ export class MyFriendsPage extends React.Component {
                 <CardColumns>
                     {(this.state.accounts &&
                         this.state.accounts.map(account =>
+                            <ProfileInfo key={account.id} className="mb-3" history={this.props.history}
+                                         account={account}/>)
+                    ) || spinner}
+                </CardColumns>
+                {recommendations?.length > 0 &&<h3>You may also know</h3>}
+                <CardColumns>
+                    {(recommendations?.length > 0 &&
+                        recommendations.map(account =>
                             <ProfileInfo key={account.id} className="mb-3" history={this.props.history}
                                          account={account}/>)
                     ) || spinner}
