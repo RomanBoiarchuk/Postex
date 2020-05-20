@@ -25,6 +25,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	implementation 'org.neo4j.springframework.data:spring-data-neo4j-rx-spring-boot-starter:1.0.1'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	compile 'io.jsonwebtoken:jjwt-api:0.11.0'

@@ -1,11 +1,11 @@
-import {Button, Card, Image} from "react-bootstrap";
+import {Badge, Button, Card, Image} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {accountService, authenticationService} from "../../services";
 
 export function Profile(props) {
     const account = props.account;
-    let signUpDate = new Date(account.signUpDate);
+    let signUpDate = new Date(account.signUpDate ? account.signUpDate : null);
     let month = new Intl.DateTimeFormat('en', {month: 'long'}).format(signUpDate);
     let year = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(signUpDate);
     let dateStr = `${month} ${year}`;
@@ -30,7 +30,7 @@ export function Profile(props) {
 
     const actionButton = () => {
         if (authenticationService.account?.id === account.id) {
-            return <Button className="float-right" variant="primary">Edit</Button>;
+            return null;
         }
         return isFriend
             ? <Button className="float-right" onClick={removeFriend} variant="primary">Unsubscribe</Button>
@@ -58,6 +58,11 @@ export function Profile(props) {
                 <Card.Body>
                     <div className="mb-5">
                         {authenticationService.isSignedIn && actionButton()}
+                        {account.connectionDegree &&
+                        <Button className="float-right mr-2" variant="primary" disabled>
+                            Connection degree <Badge variant="light">{account.connectionDegree}</Badge>
+                        </Button>
+                        }
                     </div>
                     <Card.Title className='mb-0'>{`${account.firstName} ${account.lastName}`}</Card.Title>
                     <Card.Text className='mb-0'>{account.user.username}</Card.Text>
@@ -70,7 +75,7 @@ export function Profile(props) {
                 </Card.Body>
             </Card>
             <br/>
-            {(account.about !== null && account.about.trim() !== "") &&
+            {(account.about && account.about.trim() !== "") &&
             <Card border="info">
                 <Card.Header>About</Card.Header>
                 <Card.Body>

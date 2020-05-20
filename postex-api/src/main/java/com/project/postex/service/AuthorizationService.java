@@ -1,6 +1,6 @@
 package com.project.postex.service;
 
-import com.project.postex.repository.PostRepository;
+import com.project.postex.repository.mongo.PostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;

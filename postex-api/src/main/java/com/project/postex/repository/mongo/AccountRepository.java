@@ -1,6 +1,6 @@
-package com.project.postex.repository;
+package com.project.postex.repository.mongo;
 
-import com.project.postex.models.Account;
+import com.project.postex.models.mongo.Account;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

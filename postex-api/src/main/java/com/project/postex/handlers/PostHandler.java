@@ -1,8 +1,8 @@
 package com.project.postex.handlers;
 
-import com.project.postex.models.Account;
-import com.project.postex.models.Comment;
-import com.project.postex.models.Post;
+import com.project.postex.models.mongo.Account;
+import com.project.postex.models.mongo.Comment;
+import com.project.postex.models.mongo.Post;
 import com.project.postex.repository.projections.PostInfo;
 import com.project.postex.service.AccountService;
 import com.project.postex.service.AuthorizationService;

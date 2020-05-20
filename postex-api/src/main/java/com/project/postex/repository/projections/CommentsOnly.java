@@ -1,6 +1,6 @@
 package com.project.postex.repository.projections;
 
-import com.project.postex.models.Comment;
+import com.project.postex.models.mongo.Comment;
 import lombok.Value;
 
 import java.util.List;
